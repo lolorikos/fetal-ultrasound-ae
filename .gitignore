@@ -4,8 +4,8 @@
 # Data folder - too large for git
 data/
 
-# Results - generated files
-results/
+# Results - large model files
+results/*.pth
 
 # Python cache
 __pycache__/

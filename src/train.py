@@ -85,4 +85,14 @@ def visualise_reconstructions(model: AutoEncoder,
     plt.tight_layout()
     plt.show()
 
+def save_model(model: AutoEncoder, path: str):
+    torch.save(model.state_dict(), path)
+    print(f"Model saved to {path}")
+
+def load_model(path: str, latent_channels: int = 16, device: str = "cpu") -> AutoEncoder:
+    model = AutoEncoder(in_channels = 1, latent_channels = latent_channels)
+    model.load_state_dict(torch.load(path, map_location = device))
+    model.to(device)
+    print(f"Model loaded from {path}")
+    return model
 

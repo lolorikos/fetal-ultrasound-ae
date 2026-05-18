@@ -30,6 +30,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.dataset.executor": "Run",
     "Python.model.executor": "Run",
+    "Python.train.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
@@ -59,7 +60,7 @@
       <updated>1779051984188</updated>
       <workItem from="1779051985305" duration="1356000" />
       <workItem from="1779053399668" duration="4767000" />
-      <workItem from="1779088191294" duration="8136000" />
+      <workItem from="1779088191294" duration="8762000" />
     </task>
     <servers />
   </component>
@@ -68,6 +69,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/fetal_ultrasound_ae$dataset.coverage" NAME="dataset Coverage Results" MODIFIED="1779057816172" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/fetal_ultrasound_ae$train.coverage" NAME="train Coverage Results" MODIFIED="1779097019279" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/fetal_ultrasound_ae$model.coverage" NAME="model Coverage Results" MODIFIED="1779091647713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>

@@ -48,6 +48,23 @@ Trained for 20 epochs on 7,129 images. 16x compression ratio.
 | Other | 0.79 | 0.52 |
 | **Overall accuracy** | **81%** | **71%** |
 
+### Stage 3 — Anomaly Detection
+
+Using reconstruction error as anomaly score. Threshold set at 95th 
+percentile of training errors.
+
+| Class | Anomaly Rate |
+|-------|-------------|
+| Fetal femur | 1.3% |
+| Maternal cervix | 1.7% |
+| Fetal abdomen | 3.9% |
+| Fetal thorax | 5.3% |
+| Other | 6.2% |
+| Fetal brain | 6.6% |
+
+Highest anomaly rate in Fetal brain images — consistent with 
+clinical importance of brain anomaly detection.
+
 ## Setup
 
 ```bash

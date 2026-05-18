@@ -37,18 +37,16 @@ Trained for 20 epochs on 7,129 images. 16x compression ratio.
 | 1×128×128 = 16,384 numbers | 16×8×8 = 1,024 numbers | 1×128×128 |
 
 ### Stage 2 — Scan Plane Classification
-Fine-tuned encoder + classification head. Trained with weighted loss 
-to handle class imbalance.
 
-| Class | F1 Score |
-|-------|----------|
-| Fetal abdomen | 0.45 |
-| Fetal brain | 0.91 |
-| Fetal femur | 0.75 |
-| Fetal thorax | 0.80 |
-| Maternal cervix | 0.96 |
-| Other | 0.79 |
-| **Overall accuracy** | **81%** |
+| Class | Train F1 | Test F1 |
+|-------|----------|---------|
+| Fetal abdomen | 0.45 | 0.37 |
+| Fetal brain | 0.91 | 0.89 |
+| Fetal femur | 0.75 | 0.69 |
+| Fetal thorax | 0.80 | 0.76 |
+| Maternal cervix | 0.96 | 0.94 |
+| Other | 0.79 | 0.52 |
+| **Overall accuracy** | **81%** | **71%** |
 
 ## Setup
 

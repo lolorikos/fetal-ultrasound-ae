@@ -4,6 +4,9 @@ A deep learning project for learning compressed representations of
 fetal ultrasound images using convolutional auto-encoders, with a 
 downstream classifier for standard scan plane detection.
 
+![Pipeline Summary](results/pipeline_summary.png)
+
+
 ## Dataset
 
 [FETAL_PLANES_DB](https://zenodo.org/records/3904280) — 12,400 labeled 

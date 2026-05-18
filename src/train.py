@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 from src.dataset import FetalPlaneDataset
-from src.model import AutoEncoder
+from src.model import AutoEncoder, FetalPlaneClassifier
+
 
 def train(model: AutoEncoder,
           train_loader: DataLoader,
@@ -95,4 +96,62 @@ def load_model(path: str, latent_channels: int = 16, device: str = "cpu") -> Aut
     model.to(device)
     print(f"Model loaded from {path}")
     return model
+
+
+def train_classifier(model: FetalPlaneClassifier,
+                     train_loader: DataLoader,
+                     num_epochs: int = 20,
+                     learning_rate: float = 1e-3,
+                     device: str = "cpu",
+                     class_weights: torch.Tensor = None) -> list:
+
+    model = model.to(device)
+
+    # loss function for classification
+    criterion = nn.CrossEntropyLoss(weight = class_weights)
+
+    # only optimize classifier parameters, not frozen encoder
+    optimizer = torch.optim.Adam(
+        filter(lambda p: p.requires_grad, model.parameters()),
+        lr = learning_rate
+    )
+
+    losses = []
+
+    for epoch in range(num_epochs):
+        model.train()
+        epoch_loss = 0.0
+        correct = 0
+        total = 0
+
+        loop = tqdm(train_loader, desc = f"Epoch {epoch + 1} / {num_epochs}")
+
+        for images, labels in loop:
+            images = images.to(device)
+            labels = labels.to(device)
+
+            # forward pass
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+
+            # backward pass
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            # track accuracy
+            _, predicted = outputs.max(1)
+            total += labels.size(0)
+            correct += predicted.eq(labels).sum().item()
+            epoch_loss += loss.item()
+
+            loop.set_postfix(loss = loss.item(),
+                             acc = f"{100. * correct / total:.2f}")
+
+        avg_loss = epoch_loss / len(train_loader)
+        accuracy = 100. * correct / total
+        losses.append(avg_loss)
+        print(f"Epoch {epoch+1}/{num_epochs} - loss: {avg_loss:.4f} - accuracy: {accuracy:.1f}%")
+
+    return losses
 

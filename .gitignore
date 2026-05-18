@@ -20,3 +20,7 @@ __pycache__/
 
 # PyCharm
 .idea/
+
+# scratch files
+scratch.ipynb
+*.scratch.ipynb

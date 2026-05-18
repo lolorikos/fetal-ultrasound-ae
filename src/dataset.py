@@ -17,6 +17,11 @@ class FetalPlaneDataset(Dataset):
         # filter train or test
         self.data = df[df["Train"] == (1 if train else 0)].reset_index(drop = True)
 
+        # map class names to integers
+        self.classes = ["Fetal abdomen", "Fetal brain", "Fetal femur",
+                "Fetal thorax", "Maternal cervix", "Other"]
+        self.class_to_idx = {c: i for i, c in enumerate(self.classes)}
+
     def __len__(self):
         return len(self.data)
 
@@ -35,7 +40,7 @@ class FetalPlaneDataset(Dataset):
             image = self.transform(image)
 
         # get the label
-        label = row["Plane"]
+        label = self.class_to_idx[row["Plane"]]
 
         return image, label
 

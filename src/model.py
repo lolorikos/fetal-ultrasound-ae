@@ -1,3 +1,5 @@
+from json import encoder
+
 import torch
 import torch.nn as nn
 
@@ -72,3 +74,30 @@ class AutoEncoder(nn.Module):
     def reconstruct(self, x: torch.Tensor) -> torch.Tensor:
         with torch.no_grad():
             return self.forward(x)
+
+
+class FetalPlaneClassifier(nn.Module):
+
+    def __init__(self, encoder: Encoder, num_classes: int = 6, frozen_encoder: bool = True):
+        super().__init__()
+
+        self.encoder = encoder
+
+        # freeze encoder weights if requested
+        if frozen_encoder:
+            for param in self.encoder.parameters():
+                param.requires_grad = False
+
+        # classification head
+        self.classifier = nn.Sequential(
+            nn.AdaptiveAvgPool2d(1),    # (batch, 16, 8, 8) -> (batch, 16, 1, 1)
+            nn.Flatten(),               # (batch, 16, 1, 1) -> (batch, 16)
+            nn.Linear(16, 64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, num_classes)
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        features = self.encoder(x)
+        return self.classifier(features)

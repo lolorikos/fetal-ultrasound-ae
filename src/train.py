@@ -7,51 +7,58 @@ from tqdm import tqdm
 
 from src.dataset import FetalPlaneDataset
 from src.model import AutoEncoder, FetalPlaneClassifier
-from src.vae import VAE, vae_loss
+from src.vae import CVAE, vae_loss
 
-def train(model: AutoEncoder,
-          train_loader: DataLoader,
-          num_epochs: int = 20,
-          learning_rate: float = 1e-3,
-          device: str = "cpu") -> list:
 
-    # move model to device
+def train_cvae(model: CVAE,
+               train_loader: DataLoader,
+               num_epochs: int = 20,
+               learning_rate: float = 0.001,
+               beta: float = 1.0,
+               device: str = "cpu") -> list:
     model = model.to(device)
-
-    # loss function and optimizer
-    criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
-    #track losses
     losses = []
 
     for epoch in range(num_epochs):
         model.train()
         epoch_loss = 0.0
+        epoch_recon = 0.0
+        epoch_kl = 0.0
 
-        # tqdm wraps the loader and shows a progress bar
-        loop = tqdm(train_loader, desc = f"Epoch {epoch + 1} / {num_epochs}")
+        loop = tqdm(train_loader, desc=f"Epoch {epoch + 1}/{num_epochs}")
 
-        for images, _ in loop:
-            # move images to device
+        for images, labels in loop:
             images = images.to(device)
+            labels = labels.to(device)
 
-            # forward pass
-            reconstructed = model(images)
-            loss = criterion(reconstructed, images)
+            # forward pass - pass labels too
+            reconstruction, mean, log_var = model(images, labels)
+
+            # compute loss
+            loss, recon_loss, kl_loss = vae_loss(
+                reconstruction, images, mean, log_var, beta=beta
+            )
 
             # backward pass
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            # track loss
             epoch_loss += loss.item()
-            loop.set_postfix(loss = loss.item())
+            epoch_recon += recon_loss.item()
+            epoch_kl += kl_loss.item()
+            loop.set_postfix(loss=loss.item())
 
         avg_loss = epoch_loss / len(train_loader)
+        avg_recon = epoch_recon / len(train_loader)
+        avg_kl = epoch_kl / len(train_loader)
         losses.append(avg_loss)
-        print(f"Epoch {epoch + 1} / {num_epochs} - avg loss: {avg_loss: .6f}")
+
+        print(f"Epoch {epoch + 1}/{num_epochs} - "
+              f"loss: {avg_loss:.2f} "
+              f"recon: {avg_recon:.2f} "
+              f"kl: {avg_kl:.2f}")
 
     return losses
 
@@ -156,7 +163,7 @@ def train_classifier(model: FetalPlaneClassifier,
     return losses
 
 
-def train_vae(model: VAE,
+def train_vae(model: CVAE,
               train_loader: DataLoader,
               num_epochs: int = 20,
               learning_rate: float = 1e-3,

@@ -86,6 +86,32 @@ Combined with real training data (7,129 + 500 = 7,629 images).
 Finding: Synthetic augmentation improves overall accuracy significantly.
 Sharper synthetic images (WGAN-GP/Diffusion) expected to improve further.
 
+### Stage 5 — WGAN-GP Synthetic Data Augmentation
+
+| Method | Test Acc | Abdomen F1 | Macro F1 |
+|--------|----------|------------|----------|
+| Real only | 65% | 0.30 | 0.62 |
+| Real + CVAE | 67% | 0.15 | 0.61 |
+| Real + WGAN-GP (all) | 59% | 0.13 | 0.46 |
+| Real + WGAN-GP (filtered >0.5) | 65% | 0.36 | 0.63 |
+
+Key finding: Quality filtering is essential. Raw synthetic data 
+hurts performance. Filtered synthetic data improves rare class F1.
+
+### Stage 6 — FID Evaluation
+
+FID computed using trained AE encoder as feature extractor.
+Lower FID = more similar to real fetal abdomen images.
+
+| Model | FID | Test Acc | Abdomen F1 |
+|-------|-----|----------|------------|
+| CVAE | 1223.88 | 67% | 0.15 |
+| WGAN-GP (unfiltered) | 533.66 | 59% | 0.13 |
+| WGAN-GP (filtered >0.5) | 518.50 | 65% | 0.36 |
+
+Finding: Lower FID correlates with visual quality but not 
+necessarily classifier performance. Quality filtering essential.
+
 ## Setup
 
 ```bash

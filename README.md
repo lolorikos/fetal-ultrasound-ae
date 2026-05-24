@@ -70,6 +70,22 @@ percentile of training errors.
 Highest anomaly rate in Fetal brain images — consistent with 
 clinical importance of brain anomaly detection.
 
+### Stage 4 — Synthetic Data Augmentation (CVAE)
+
+Generated 500 synthetic Fetal Abdomen images using CVAE.
+Combined with real training data (7,129 + 500 = 7,629 images).
+
+| Metric | Real only | Real + Synthetic | Change |
+|--------|-----------|------------------|--------|
+| Overall accuracy | 54% | 67% | +13% |
+| Fetal brain F1 | 0.62 | 0.85 | +0.23 |
+| Fetal femur F1 | 0.02 | 0.62 | +0.60 |
+| Fetal thorax F1 | 0.19 | 0.58 | +0.39 |
+| Fetal abdomen F1 | 0.21 | 0.15 | -0.06 |
+
+Finding: Synthetic augmentation improves overall accuracy significantly.
+Sharper synthetic images (WGAN-GP/Diffusion) expected to improve further.
+
 ## Setup
 
 ```bash
